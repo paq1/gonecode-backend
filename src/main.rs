@@ -6,13 +6,12 @@ use framework_cqrs_lib::cqrs::infra::api_key::component::ApiKeyComponent;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
-use api::regexword::routes::read_routes::{fetch_many_regexword, fetch_one_regexword};
-use api::regexword::routes::write_routes::{insert_one_regexword, select_one_regexword};
+use api::pouet::routes::read_routes::{fetch_many_pouet, fetch_one_pouet};
+use api::pouet::routes::write_routes::insert_one_pouet;
 
-
-use crate::api::regexword::regexword_component::RegexWordComponent;
-use crate::api::regexword::routes::exemple_wit_api_key_routes::exemple_api_key;
-use crate::api::regexword::routes::read_routes::{fetch_regexword_events, fetch_one_regexword_event, dayword_regexword, check_regexword};
+use crate::api::pouet::pouet_component::RegexWordComponent;
+use crate::api::pouet::routes::exemple_wit_api_key_routes::exemple_api_key;
+use crate::api::pouet::routes::read_routes::{fetch_pouet_events, fetch_one_pouet_event};
 use crate::api::swagger::ApiDoc;
 use framework_cqrs_lib::cqrs::infra::authentication::AuthenticationComponent;
 
@@ -33,10 +32,10 @@ async fn main() -> std::io::Result<()> {
 
     let authentication_component = Arc::new(AuthenticationComponent::new().unwrap());
     let api_key_component = Arc::new(ApiKeyComponent::new(
-        "regexwordapi", "regexword",
+        "gonecodeapi", "pouet",
     ).await);
 
-    // regexword aggregat
+    // pouet aggregat
     let regexword_component = RegexWordComponent::new(&authentication_component.clone()).await;
 
     let openapi = ApiDoc::openapi();
@@ -60,17 +59,14 @@ async fn main() -> std::io::Result<()> {
             ))
             .app_data(web::Data::new(standard_http_error))
             .app_data(web::Data::new(authentication_component.jwt_token_decoder_service.clone()))
-            // regexword services
+            // pouet services
             .service(
-                web::scope("/regexword")
-                    .service(dayword_regexword)
-                    .service(check_regexword)
-                    .service(fetch_one_regexword)
-                    .service(fetch_one_regexword_event)
-                    .service(fetch_many_regexword)
-                    .service(fetch_regexword_events)
-                    .service(insert_one_regexword)
-                    .service(select_one_regexword)
+                web::scope("/pouet")
+                    .service(fetch_one_pouet)
+                    .service(fetch_one_pouet_event)
+                    .service(fetch_many_pouet)
+                    .service(fetch_pouet_events)
+                    .service(insert_one_pouet)
                     .service(exemple_api_key)
                     .app_data(web::Data::new(Arc::clone(&regexword_component.engine)))
                     .app_data(
@@ -81,9 +77,6 @@ async fn main() -> std::io::Result<()> {
                     )
                     .app_data(
                         web::Data::new(Arc::clone(&regexword_component.service))
-                    )
-                    .app_data(
-                        web::Data::new(Arc::clone(&regexword_component.select_regexword_service))
                     )
                     .app_data(
                         web::Data::new(api_key_component.service.clone())

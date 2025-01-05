@@ -3,7 +3,7 @@ use chrono_tz::Europe::Paris;
 use framework_cqrs_lib::cqrs::core::context::Context;
 use framework_cqrs_lib::cqrs::models::errors::{Error, ResultErr};
 
-pub fn give_date_time_with_hours(hour: u32, context: &Context) -> ResultErr<DateTime<Utc>> {
+pub fn _give_date_time_with_hours(hour: u32, context: &Context) -> ResultErr<DateTime<Utc>> {
     let paris_timezone = context.now.with_timezone(&Paris);
 
     paris_timezone
@@ -14,7 +14,7 @@ pub fn give_date_time_with_hours(hour: u32, context: &Context) -> ResultErr<Date
         .map(|date| date.with_timezone(&Utc))
 }
 
-pub fn ctx_is_after_datetime(datetime: &DateTime<Utc>, context: &Context) -> ResultErr<bool> {
+pub fn _ctx_is_after_datetime(datetime: &DateTime<Utc>, context: &Context) -> ResultErr<bool> {
     context
         .now
         .with_hour(context.now.hour())

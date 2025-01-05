@@ -8,12 +8,12 @@ async fn main() {
     env_logger::init();
 
     let api_key_component = Arc::new(ApiKeyComponent::new(
-        "regexwordapi", "regexword",
+        "gonecodeapi", "pouet",
     ).await);
 
     let maybe_create_api_key = api_key_component
         .service
-        .create_api_key(&"dgv-api-doggoverse".to_string()).await;
+        .create_api_key(&"whowhantapi-accesss-exemple-doggoverselol".to_string()).await;
 
     match maybe_create_api_key {
         Ok(api_key) => {

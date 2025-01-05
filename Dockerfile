@@ -1,5 +1,5 @@
 # Étape 1 : Compilation
-FROM rust:1.72 AS builder
+FROM rust:1.83 AS builder
 COPY . .
 WORKDIR /
 RUN cargo build --release
